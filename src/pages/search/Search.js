@@ -16,7 +16,7 @@ const Search = () => {
     <div>
       <h2 className="page-title">Recipes including "{query}"</h2>
       {error && <div className="error">{error}</div>}
-      {isPending && <div>Loading...</div>}
+      {isPending && <div className="loading">Loading...</div>}
       {data && <RecipeList recipes={data} />}
     </div>
   )

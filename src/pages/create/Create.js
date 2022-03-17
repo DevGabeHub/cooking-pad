@@ -1,11 +1,13 @@
 import { useFetch } from '../../hooks/useFetch'
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTheme } from '../../hooks/useTheme'
 
 //styles
 import './Create.css'
 
 const Create = () => {
+  const { mode } = useTheme()
   const [title, setTitle] = useState('')
   const [method, setMethod] = useState('')
   const [cookingTime, setCookingTime] = useState('')
@@ -44,7 +46,7 @@ const Create = () => {
   }, [data, navigate])
 
   return (
-    <div className="create">
+    <div className={`create ${mode}`}>
       <form onSubmit={handleSubmit}>
         <label>
           <span>Recipe Title:</span>
