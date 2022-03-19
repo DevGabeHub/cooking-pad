@@ -1,5 +1,6 @@
-import { useFetch } from '../../hooks/useFetch'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
+import { addDoc, collection } from 'firebase/firestore'
+import { db } from '../../firebase/config'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../../hooks/useTheme'
 
@@ -14,18 +15,22 @@ const Create = () => {
   const [newIngredient, setNewIngredient] = useState('')
   const [ingredients, setIngredients] = useState([])
   const ingredientInput = useRef()
-  const { postData, data } = useFetch('http://localhost:3000/recipes', 'POST')
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    postData({
-      title,
-      ingredients,
-      method,
-      cookingTime: cookingTime + ' minutes',
-    })
+    try {
+      await addDoc(collection(db, 'recipes'), {
+        title,
+        ingredients,
+        method,
+        cookingTime: cookingTime + ' minutes',
+      })
+      navigate('/')
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleAdd = (e) => {
@@ -39,19 +44,13 @@ const Create = () => {
     ingredientInput.current.focus()
   }
 
-  useEffect(() => {
-    if (data) {
-      navigate('/')
-    }
-  }, [data, navigate])
-
   return (
     <div className={`create ${mode}`}>
       <form onSubmit={handleSubmit}>
         <label>
           <span>Recipe Title:</span>
           <input
-            type="text"
+            type='text'
             onChange={(e) => setTitle(e.target.value)}
             value={title}
             required
@@ -59,9 +58,9 @@ const Create = () => {
         </label>
         <label>
           <span>Recipe Ingredients:</span>
-          <div className="ingredients">
+          <div className='ingredients'>
             <input
-              type="text"
+              type='text'
               onChange={(e) => setNewIngredient(e.target.value)}
               value={newIngredient}
               ref={ingredientInput}
@@ -86,7 +85,7 @@ const Create = () => {
         <label>
           <span>Cooking Time:</span>
           <input
-            type="number"
+            type='number'
             onChange={(e) => setCookingTime(e.target.value)}
             value={cookingTime}
             required

@@ -1,5 +1,5 @@
-import { useFetch } from '../../hooks/useFetch'
 import { useParams } from 'react-router-dom'
+import { useDocument } from '../../hooks/useDocument'
 import { useTheme } from '../../hooks/useTheme'
 
 //styles
@@ -8,16 +8,15 @@ import './Recipe.css'
 const Recipe = () => {
   const { mode } = useTheme()
   const { id } = useParams()
-  const url = 'http://localhost:3000/recipes/' + id
-  const { data: recipe, isPending, error } = useFetch(url)
+  const { document: recipe, isPending, error } = useDocument('recipes', id)
 
   return (
     <div className={`recipe ${mode}`}>
-      {isPending && <div className="loading">Loading...</div>}
-      {error && <div className="error">{error}</div>}
+      {error && <div className='error'>{error}</div>}
+      {isPending && <div className='loading'>Loading...</div>}
       {recipe && (
         <>
-          <h2 className="page-title">{recipe.title}</h2>
+          <h2 className='page-title'>{recipe.title}</h2>
           <p>Takes {recipe.cookingTime} to make</p>
           <ul>
             {recipe.ingredients.map((ing) => (
@@ -26,7 +25,7 @@ const Recipe = () => {
               </li>
             ))}
           </ul>
-          <p className="method">{recipe.method}</p>
+          <p className='method'>{recipe.method}</p>
         </>
       )}
     </div>

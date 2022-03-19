@@ -1,19 +1,18 @@
 import RecipeList from '../../components/RecipeList'
-import { useFetch } from '../../hooks/useFetch'
+
+//import collection
+import { useCollection } from '../../hooks/useCollection'
 
 //styles
 import './Home.css'
 
 const Home = () => {
-  const {
-    data: recipes,
-    isPending,
-    error,
-  } = useFetch('http://localhost:3000/recipes')
+  const { documents: recipes, isPending, error } = useCollection('recipes')
+
   return (
-    <div className="home">
-      {isPending && <div className="loading">Loading...</div>}
-      {error && <div className="error">{error}</div>}
+    <div className='home'>
+      {error && <div className='error'>{error}</div>}
+      {isPending && <div className='loading'>Loading...</div>}
       {recipes && <RecipeList recipes={recipes} />}
     </div>
   )
